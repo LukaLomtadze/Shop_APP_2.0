@@ -13,7 +13,7 @@ import { useCartStore } from '../statemanagment/cartStore';
 import CartDropDown from './CartDropDown';
 
 
-const Navbar = ({bgBlurr}) => {
+const Navbar = () => {
 
   const[icon, setIcon] = useState(<BsCurrencyDollar />)
 

@@ -1,8 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { data as datas } from './dropdownCartData';
+
+import { BsCurrencyDollar } from 'react-icons/bs';
+import { MdEuroSymbol } from "react-icons/md";
+import { FaLariSign } from "react-icons/fa6";
 
 const CartDropDown = React.forwardRef((props, ref) => {
   const [data] = useState(datas);
+
+  const [icon, setIcon] = useState(<BsCurrencyDollar />)
+
+  useEffect(() => {
+    const updateIcon = () => {
+        let currentCurrent = localStorage.getItem("currency");
+        if(currentCurrent === "USD") setIcon(<BsCurrencyDollar />)
+        else if(currentCurrent === "EUR") setIcon(<MdEuroSymbol />)
+        else if(currentCurrent === "GEL") setIcon(<FaLariSign />)
+    }
+
+    updateIcon();
+
+    window.addEventListener("currencyChange", updateIcon);
+
+    return () => {
+        window.removeEventListener("currencyChange", updateIcon)
+    }
+  }, [])
 
 
   const [quantities, setQuantities] = useState(() =>
@@ -28,6 +51,25 @@ const CartDropDown = React.forwardRef((props, ref) => {
     0
   );
 
+
+
+  const storedCR = localStorage.getItem("currency");
+
+  const getTotalConverted = () => {
+    let tot = total;
+    if (storedCR === "EUR") tot *= 0.86;
+    else if (storedCR === "GEL") tot *= 2.70;
+    return tot.toFixed(2);
+  }
+
+    const getConvertedPrice = (product) => {
+        
+        let price = product.price;
+        if (storedCR === "EUR") price *= 0.86;
+        else if (storedCR === "GEL") price *= 2.70;
+        return price.toFixed(2);
+    };
+
   return (
     <div
       ref={ref}
@@ -41,7 +83,7 @@ const CartDropDown = React.forwardRef((props, ref) => {
           <div key={prod.id} className="mt-10 pr-3 flex flex-row w-[293px] h-[162px]">
             <div className="flex flex-col">
               <span>{prod.name}</span>
-              <span className="mt-5">{prod.price}</span>
+              <span className="mt-5 flex flex-row items-center">{icon}{getConvertedPrice(prod)}</span>
 
               <span className="mt-5">Size:</span>
               <div className="flex flex-row gap-1 mt-2">
@@ -78,7 +120,7 @@ const CartDropDown = React.forwardRef((props, ref) => {
 
       <div className="flex flex-row justify-between mt-2">
         <span>Total:</span>
-        <span>{total.toFixed(2)}</span>
+        <span className='flex flex-row items-center'>{icon}{(getTotalConverted())}</span>
       </div>
 
       <div className="flex flex-row gap-5 h-[100px] justify-center items-center">

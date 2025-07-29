@@ -33,7 +33,7 @@ const ProductPage = () => {
             return toast.error("Please choose size before purchasing")
         }
 
-        addToCart()
+        addToCart({ ...product, selectedSize: activebtn });
         return toast.success("Succesfully added to card");
     }
 
