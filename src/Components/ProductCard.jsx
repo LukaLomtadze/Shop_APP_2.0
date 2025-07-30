@@ -52,7 +52,7 @@ const ProductCard = ({category}) => {
                         }
                     
                         return(
-                            <div id={prod.id} className='group relative flex flex-col gap-1 font-[Raleway] hover:shadow-2xl hover:cursor-pointer hover:bg-[#f1f1f17e] hover:transition-all duration-300 ease-in-out p-5 my-10'>
+                            <div id={prod.id} key={prod.id} className='group relative flex flex-col gap-1 font-[Raleway] hover:shadow-2xl hover:cursor-pointer hover:bg-[#f1f1f17e] hover:transition-all duration-300 ease-in-out p-5 my-10'>
                                 <img src={prod.image} />
                                 <span>{prod.name}</span>
                                 <NavLink  to={`/${prod.category}/${prod.id}/${prod.name}`}>

@@ -1,12 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { data as datas } from './dropdownCartData';
-
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { MdEuroSymbol } from "react-icons/md";
 import { FaLariSign } from "react-icons/fa6";
+import { useCartLogicStore } from '../statemanagment/cartStore';
+import { NavLink } from 'react-router-dom';
 
 const CartDropDown = React.forwardRef((props, ref) => {
-  const [data] = useState(datas);
+
+  const cartItems = useCartLogicStore((state) => state.cartItems);
+  const removeFromCart = useCartLogicStore((state) => state.removeFromCart);
+
+
+  const[activeBtn, setActiveBtn] = useState(() => {
+    const sizes = {};
+    cartItems.forEach(item => {
+        const stored = localStorage.getItem(`size-product-${item.id}`);
+        sizes[item.id] = stored || "";
+    })
+
+    return sizes;
+  })
+
+  const handleSizeChange = (productId, sizeKey) => {
+    setActiveBtn(prev => (
+        {
+            ...prev,
+            [productId] : sizeKey,
+
+        }
+    ))
+    localStorage.setItem(`size-product-${productId}`, sizeKey);
+  }
 
   const [icon, setIcon] = useState(<BsCurrencyDollar />)
 
@@ -29,7 +53,7 @@ const CartDropDown = React.forwardRef((props, ref) => {
 
 
   const [quantities, setQuantities] = useState(() =>
-    Object.fromEntries(datas.map((item) => [item.id, 1]))
+    Object.fromEntries(cartItems.map((item) => [item.id, 1]))
   );
 
   const increment = (id) => {
@@ -42,12 +66,12 @@ const CartDropDown = React.forwardRef((props, ref) => {
   const decrement = (id) => {
     setQuantities((prev) => ({
       ...prev,
-      [id]: prev[id] > 1 ? prev[id] - 1 : 1,
+      [id]: prev[id] > 0 ? prev[id] - 1 : 0,
     }));
   };
 
-  const total = data.reduce(
-    (sum, item) => sum + item.price * (quantities[item.id] || 1),
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * (quantities[item.id] || 0),
     0
   );
 
@@ -73,28 +97,32 @@ const CartDropDown = React.forwardRef((props, ref) => {
   return (
     <div
       ref={ref}
-      className="w-[325px] pt-8 px-5 h-[625px] font-[Raleway] border-2 bg-gray-100 border-black absolute top-[70px] right-[60px] z-100"
+      className="w-[325px] pt-8 px-5 h-[625px] font-[Raleway] border-2 bg-white border-black absolute top-[70px] right-[60px] z-100"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="products h-[80%] w-[325px] overflow-y-auto">
-        <span>My Bag, {data.length} items</span>
+        <span>My Bag, {cartItems.length} items</span>
 
-        {data.map((prod) => (
+        {cartItems.map((prod) => (
           <div key={prod.id} className="mt-10 pr-3 flex flex-row w-[293px] h-[162px]">
             <div className="flex flex-col">
               <span>{prod.name}</span>
               <span className="mt-5 flex flex-row items-center">{icon}{getConvertedPrice(prod)}</span>
 
               <span className="mt-5">Size:</span>
-              <div className="flex flex-row gap-1 mt-2">
-                {["XS", "X", "L", "M"].map((size) => (
-                  <button
-                    key={size}
-                    className="border border-gray-800 w-6 h-6 cursor-pointer"
-                  >
-                    {size}
-                  </button>
-                ))}
+              <div className="flex flex-row gap-1 mt-2" key={prod.id}>
+                <button className={`${activeBtn[prod.id] === "b1" ? "bg-gray-800 text-white transition-all duration-50 ease-in" : "bg-white text-black"} border-gray-800 border-1 w-6 h-6 cursor-pointer`}
+                    onClick={() => {handleSizeChange(prod.id, "b1");}}
+                >XS</button>
+                <button className={`${activeBtn[prod.id] === "b2" ? "bg-gray-800 text-white transition-all duration-50 ease-in" : "bg-white text-black"} border-gray-800 border-1 w-6 h-6 cursor-pointer`}
+                    onClick={() => {handleSizeChange(prod.id, "b2");}}
+                >S</button>
+                <button className={`${activeBtn[prod.id] === "b3" ? "bg-gray-800 text-white transition-all duration-50 ease-in" : "bg-white text-black"} border-gray-800 border-1 w-6 h-6 cursor-pointer`}
+                    onClick={() => {handleSizeChange(prod.id, "b3");}}
+                >M</button>
+                <button className={`${activeBtn[prod.id] === "b4" ? "bg-gray-800 text-white transition-all duration-50 ease-in" : "bg-white text-black"} border-gray-800 border-1 w-6 h-6 cursor-pointer`}
+                    onClick={() => {handleSizeChange(prod.id, "b4");}}
+                >L</button>
               </div>
             </div>
             <div className="ml-4 flex flex-col justify-between items-center">
@@ -106,7 +134,13 @@ const CartDropDown = React.forwardRef((props, ref) => {
               </button>
               <span>{quantities[prod.id]}</span>
               <button
-                onClick={() => decrement(prod.id)}
+                onClick={() => {
+                    if (quantities[prod.id] === 1) {
+                      removeFromCart(prod.id);
+                    } else {
+                      decrement(prod.id);
+                    }
+                  }}
                 className="cursor-pointer w-6 h-6 text-[20px] border flex items-center justify-center border-gray-800"
               >
                 –
@@ -124,9 +158,11 @@ const CartDropDown = React.forwardRef((props, ref) => {
       </div>
 
       <div className="flex flex-row gap-5 h-[100px] justify-center items-center">
+        <NavLink to={"/insideCart"}>
         <button className="font-[Raleway] cursor-pointer border-2 border-gray-800 uppercase w-[140px] h-[43px]">
           View Bag
         </button>
+        </NavLink>
         <button className="font-[Raleway] cursor-pointer text-white uppercase w-[140px] h-[43px] bg-[#5ECE7B]">
           Checkout
         </button>

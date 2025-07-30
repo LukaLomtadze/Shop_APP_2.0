@@ -6,6 +6,8 @@ import Kids from "./Pages/Kids";
 import Navbar from "./Components/Navbar";
 import ProductPage from "./Components/ProductPage";
 import { Toaster } from "react-hot-toast";
+import Bag from "./Components/Bag";
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
         <Route path="/men" element={<Men />} />
         <Route path="/kids" element={<Kids />} />
         <Route path="/:category/:id/:name" element={<ProductPage />}/>
+        <Route path="/insideCart" element={<Bag />}></Route>
       </Routes>
       <Toaster position="top-center" reverseOrder={false} />
     </div>

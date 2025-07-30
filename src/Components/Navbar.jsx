@@ -9,7 +9,7 @@ import DropDown from './DropDown';
 import { FaAngleUp } from "react-icons/fa";
 
 import { useRef, useEffect } from 'react';
-import { useCartStore } from '../statemanagment/cartStore';
+import { useCartLogicStore } from '../statemanagment/cartStore';
 import CartDropDown from './CartDropDown';
 
 
@@ -22,7 +22,7 @@ const Navbar = () => {
   //const[currentCur, setCurrentCur] = useState(localStorage.getItem("curreny"));
 
 
-  const cartCount = useCartStore((state) => state.cartCount);
+  const cartItems = useCartLogicStore((state) => state.cartItems);
 
   const toggleVisibility = () => {
     setCartDrop(!cartDrop)
@@ -102,7 +102,7 @@ const Navbar = () => {
 
           <DropDown visible={drop} setIcon={setIcon} setDrop={setDrop} />
         </div>
-        <div className={`absolute top-4 right-[65px] text-[13px] bg-gray-800 rounded-full w-5 h-5 font-normal text-white flex justify-center items-center ${cartCount <= 0 ? "opacity-0" : "opacity-100"}`}>{cartCount}</div>
+        <div className={`absolute top-4 right-[65px] text-[13px] bg-gray-800 rounded-full w-5 h-5 font-normal text-white flex justify-center items-center ${cartItems.length <= 0 ? "opacity-0" : "opacity-100"}`}>{cartItems.length}</div>
 
 
         <BsCart className='cursor-pointer' onClick={() => toggleVisibility()} />

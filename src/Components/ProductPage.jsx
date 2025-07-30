@@ -5,20 +5,20 @@ import { BsCurrencyDollar } from 'react-icons/bs';
 import { MdEuroSymbol } from "react-icons/md";
 import { FaLariSign } from "react-icons/fa6";
 import {toast} from "react-hot-toast";
-import { useCartStore } from '../statemanagment/cartStore.js';
+import { useCartStore, useCartLogicStore } from '../statemanagment/cartStore.js';
 
 const ProductPage = () => {
 
     const {id} = useParams()
     const product = datas.find(p => p.id === parseInt(id));
-
-    
-
     const[activebtn, setActiveBtn] = useState("")
 
     const[icon, setIcon] = useState(<BsCurrencyDollar />);
 
     const addToCart = useCartStore((state) => state.addToCart);
+
+
+    const addToCartLogic = useCartLogicStore((state) => state.addToCartLogic);
 
     useEffect(() => {
         const currentSize = localStorage.getItem(`size-${id}`);
@@ -40,11 +40,11 @@ const ProductPage = () => {
     useEffect(() => {
         const updateIcon = () => {
             const currentCurrency = localStorage.getItem("currency");
-        if(currentCurrency === 'USD') {
-            setIcon(<BsCurrencyDollar />)
-        }
-        else if(currentCurrency === "EUR") setIcon(<MdEuroSymbol />)
-        else if(currentCurrency === "GEL") setIcon(<FaLariSign />)
+            if(currentCurrency === 'USD') {
+                setIcon(<BsCurrencyDollar />)
+            }
+            else if(currentCurrency === "EUR") setIcon(<MdEuroSymbol />)
+            else if(currentCurrency === "GEL") setIcon(<FaLariSign />)
         }
         updateIcon();
 
@@ -65,9 +65,6 @@ const ProductPage = () => {
         else if (storedCR === "GEL") price *= 2.70;
         return price.toFixed(2);
     };
-
-  
-
 
     if(!product){
         return <div className='text-center py-10 text-xl'>Product not found</div>
@@ -133,7 +130,7 @@ const ProductPage = () => {
                     }
                 </span>
             </div>
-            <button className='mt-5 uppercase w-[350px] text-white cursor-pointer hover:bg-[#74e592] h-[52px] bg-[#5ECE7B]' onClick={checkCheckout}>Add to cart</button>
+            <button className='mt-5 uppercase w-[350px] text-white cursor-pointer hover:bg-[#74e592] h-[52px] bg-[#5ECE7B]' onClick={() => {checkCheckout(); addToCartLogic({...product, selectedSize: activebtn})}}>Add to cart</button>
 
             <p className='flex  w-[350px] mt-8'>{product.desc}</p>
         </div>
