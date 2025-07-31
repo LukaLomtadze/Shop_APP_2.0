@@ -148,7 +148,7 @@ const Bag = () => {
 
             <div className='mt-10 mb-10 flex flex-col gap-3'>
                 <span className='font-[raleway] text-2xl flex flex-row items-center'>Total: {icon} {getTotalChange()}</span>
-                <button className='w-[279px] h-[43px] bg-[#5ECE7B] text-white cursor-pointer'>Continue</button>
+                <NavLink to={"/details"}><button className='w-[279px] h-[43px] bg-[#5ECE7B] text-white cursor-pointer'>Continue</button></NavLink>
             </div>     
     </div>    
   )

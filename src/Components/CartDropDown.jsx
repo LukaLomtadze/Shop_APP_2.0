@@ -163,9 +163,9 @@ const CartDropDown = React.forwardRef((props, ref) => {
           View Bag
         </button>
         </NavLink>
-        <button className="font-[Raleway] cursor-pointer text-white uppercase w-[140px] h-[43px] bg-[#5ECE7B]">
+        <NavLink to={"/details"}><button className="font-[Raleway] cursor-pointer text-white uppercase w-[140px] h-[43px] bg-[#5ECE7B]">
           Checkout
-        </button>
+        </button></NavLink>
       </div>
     </div>
   );

@@ -7,13 +7,23 @@ import Navbar from "./Components/Navbar";
 import ProductPage from "./Components/ProductPage";
 import { Toaster } from "react-hot-toast";
 import Bag from "./Components/Bag";
+import { useLocation } from 'react-router-dom';
+import Details from "./Components/Details";
+import Shipping from "./Components/Shipping";
+import Payment from "./Components/Payment";
 
 
 function App() {
+
+  const hideNavBar = ["/details", "/shipping", "/payment"];
+  const location = useLocation();
+
+  const hideBar = hideNavBar.includes(location.pathname)
+
   return (
 
     <div className="px-[4rem]">
-      <Navbar bgBlurr={false} />
+      {!hideBar && <Navbar bgBlurr={false} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/women" element={<Women />} />
@@ -21,6 +31,9 @@ function App() {
         <Route path="/kids" element={<Kids />} />
         <Route path="/:category/:id/:name" element={<ProductPage />}/>
         <Route path="/insideCart" element={<Bag />}></Route>
+        <Route path="/details" element={<Details />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/payment" element={<Payment />} />
       </Routes>
       <Toaster position="top-center" reverseOrder={false} />
     </div>
