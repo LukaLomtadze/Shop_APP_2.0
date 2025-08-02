@@ -22,6 +22,7 @@ function App() {
 
   return (
 
+    <>
     <div className="px-[4rem]">
       {!hideBar && <Navbar bgBlurr={false} />}
       <Routes>
@@ -32,11 +33,15 @@ function App() {
         <Route path="/:category/:id/:name" element={<ProductPage />}/>
         <Route path="/insideCart" element={<Bag />}></Route>
         <Route path="/details" element={<Details />} />
-        <Route path="/shipping" element={<Shipping />} />
+        
         <Route path="/payment" element={<Payment />} />
       </Routes>
       <Toaster position="top-center" reverseOrder={false} />
     </div>
+    <Routes>
+      <Route path="/shipping" element={<Shipping/>} />
+    </Routes>
+    </>
   );
 }
 

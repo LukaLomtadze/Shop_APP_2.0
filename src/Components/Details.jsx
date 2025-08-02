@@ -226,7 +226,7 @@ const Details = () => {
         "Zambia",
         "Zimbabwe",
         "Palestine"
-      ];
+    ];
       
 
 
@@ -245,6 +245,10 @@ const Details = () => {
     const CheckForm = () => {
         if(!DetailsData.email || !DetailsData.name || !DetailsData.sname || !DetailsData.address || !DetailsData.address || !DetailsData.city || !DetailsData.pcode || !DetailsData.province || !DetailsData.county){
             return toast.error("All the required fileds must be filled")
+        }
+
+        if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(DetailsData.email)){
+            return toast.error("Invalid email format")
         }
 
         return true;
@@ -296,14 +300,14 @@ const Details = () => {
         let price = cartItems[0].price;
         if (storedCR === "EUR") price *= 0.86;
         else if (storedCR === "GEL") price *= 2.70;
-        return price.toFixed(2);
+        return Number(price.toFixed(2));
     }
 
     const handleTotalConvert = () => {
         let price = total;
         if (storedCR === "EUR") price *= 0.86;
         else if (storedCR === "GEL") price *= 2.70;
-        return price
+        return Number(price)
     }
       
   return (
@@ -311,7 +315,7 @@ const Details = () => {
         <div className='flex flex-col justify-between lg:flex-row md:flex-row'>
         <div>
         <div className='w-full mb-[60px] flex flex-row items-center gap-3 text-[18px]'>
-            <span className='text-[#56B280] font-semibold'>Cart</span>
+            <span className='text-[#56B280] font-semibold'><NavLink to={"/insideCart"}>Cart</NavLink></span>
             <IoIosArrowForward />
             <span className='font-semibold'>Details</span>
             <IoIosArrowForward />
@@ -397,14 +401,14 @@ const Details = () => {
                     </div>
             </div>
             <div className='flex flex-row items-center gap-3 mt-1'>
-                <input type='checkbox' className='w-4 h-4 border-2 border-gray-300 rounded-none ' />
-                <span>Save this inforamtion for the future transactions</span>
+                <input type='checkbox' id='asd' className='w-4 h-4 border-2 border-gray-300 rounded-none ' />
+                <label htmlFor='asd'>Save this inforamtion for the future transactions</label>
             </div>
 
         </div>
         </div>
         <div>
-        <div className='flex flex-row gap-3 mr-[80px] border-b-1 border-[#56B28033] h-[136px]'>
+        <div className='flex flex-row gap-3 w-[512px] mr-[80px] sm:max-w-full lg:max-w-[512px] md:max-w-[512px] border-b-1 border-[#56B28033] h-[136px]'>
             <div className='w-[516px] h-[136px] flex flex-row gap-[70px]'>
                 <div className='h-[130px] w-[160px] bg-[#F7F8FA] flex items-center justify-center'>
                     <img src={cartItems[0].image} className='w-[113px] h-[103px]' />
@@ -415,7 +419,7 @@ const Details = () => {
                 </div>
             </div>
         </div>
-            <div className='grid font-[Roboto] text-[14px] border-b-1 border-[#56B28033] mt-2 grid-cols-2 w-[516px] p-5 gap-4'>
+            <div className='grid font-[Roboto] sm:max-w-full lg:max-w-[516px] md:max-w-[516px] text-[14px] border-b-1 border-[#56B28033] mt-2 grid-cols-2  p-5 gap-4'>
                 <span>Subtotal</span>
                 <span className='text-right font-[Roboto]'>{icon}{handleCurrencyConvert()}</span>
                 <span>Shipping</span>
